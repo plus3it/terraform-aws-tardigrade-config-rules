@@ -403,7 +403,7 @@ data "aws_iam_policy_document" "lambda_iam_user_active" {
 }
 
 module "lambda_iam_user_active" {
-  source = "git::https://github.com/plus3it/terraform-aws-lambda.git?ref=v0.12.0"
+  source = "git::https://github.com/plus3it/terraform-aws-lambda.git?ref=v1.1.0"
 
   function_name = "config_rule_iam_user_active"
   description   = "Checks if IAM users are active"
