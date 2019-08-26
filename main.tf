@@ -465,7 +465,7 @@ resource "aws_config_config_rule" "iam_user_active" {
 
 ### config_enabled
 module "lambda_config_enabled" {
-  source = "git::https://github.com/plus3it/terraform-aws-lambda.git?ref=v0.12.0"
+  source = "git::https://github.com/plus3it/terraform-aws-lambda.git?ref=v1.1.0"
 
   function_name = "config_rule_config_enabled"
   description   = "Checks that Config has been activated and is logging to a specific bucket and sending to a specifc SNS topic"
