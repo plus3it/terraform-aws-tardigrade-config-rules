@@ -1,7 +1,6 @@
 provider "aws" {}
 
 locals {
-  exclude_restricted_ssh                           = "${contains(var.exclude_rules, "restricted_ssh")}"
   exclude_cloudtrail_enabled                       = "${contains(var.exclude_rules, "cloudtrail_enabled")}"
   exclude_iam_password_policy                      = "${contains(var.exclude_rules, "iam_password_policy")}"
   exclude_s3_bucket_public_read_prohibited         = "${contains(var.exclude_rules, "s3_bucket_public_read_prohibited")}"
@@ -13,13 +12,15 @@ locals {
   exclude_ec2_volume_inuse_check                   = "${contains(var.exclude_rules, "ec2_volume_inuse_check")}"
   exclude_eip_attached                             = "${contains(var.exclude_rules, "eip_attached")}"
   exclude_lambda_function_public_access_prohibited = "${contains(var.exclude_rules, "lambda_function_public_access_prohibited")}"
-  exclude_restricted_incoming_traffic              = "${contains(var.exclude_rules, "restricted_incoming_traffic")}"
   exclude_root_account_mfa_enabled                 = "${contains(var.exclude_rules, "root_account_mfa_enabled")}"
   exclude_iam_access_key_rotation_check            = "${contains(var.exclude_rules, "iam_access_key_rotation_check")}"
   exclude_rds_vpc_public_subnet                    = "${contains(var.exclude_rules, "rds_vpc_public_subnet")}"
   exclude_iam_user_active                          = "${contains(var.exclude_rules, "iam_user_active")}"
   exclude_config_enabled                           = "${contains(var.exclude_rules, "config_enabled")}"
   exclude_iam_mfa_for_console_access               = "${contains(var.exclude_rules, "iam_mfa_for_console_access")}"
+  exclude_restricted_common_ports_access           = "${contains(var.exclude_rules, "restricted_common_ports_access")}"
+  exclude_restricted_common_ports_database         = "${contains(var.exclude_rules, "restricted_common_ports_database")}"
+  exclude_ebs_snapshot_public_restorable_check     = "${contains(var.exclude_rules, "ebs_snapshot_public_restorable_check")}"
 }
 
 locals {
@@ -60,18 +61,6 @@ data "template_file" "iam_password_policy" {
               "MaxPasswordAge":"60"
             }
             EOF
-}
-
-resource "aws_config_config_rule" "restricted_ssh" {
-  count = "${var.create_config_rules && ! local.exclude_restricted_ssh ? 1 : 0}"
-
-  name        = "restricted-ssh"
-  description = "${var.config_recorder}"
-
-  source {
-    owner             = "AWS"
-    source_identifier = "INCOMING_SSH_DISABLED"
-  }
 }
 
 resource "aws_config_config_rule" "cloudtrail_enabled" {
@@ -205,24 +194,6 @@ resource "aws_config_config_rule" "lambda_function_public_access_prohibited" {
   source {
     owner             = "AWS"
     source_identifier = "LAMBDA_FUNCTION_PUBLIC_ACCESS_PROHIBITED"
-  }
-}
-
-resource "aws_config_config_rule" "restricted_incoming_traffic" {
-  count = "${var.create_config_rules && ! local.exclude_restricted_incoming_traffic ? 1 : 0}"
-
-  name        = "restricted-incoming-traffic"
-  description = "${var.config_recorder}"
-
-  input_parameters = <<-EOF
-    {
-      "blockedPort1": "3389"
-    }
-    EOF
-
-  source {
-    owner             = "AWS"
-    source_identifier = "RESTRICTED_INCOMING_TRAFFIC"
   }
 }
 
@@ -591,4 +562,55 @@ resource "aws_config_config_rule" "iam_mfa_for_console_access" {
   depends_on = [
     "aws_lambda_permission.iam_mfa_for_console_access",
   ]
+}
+
+### RESTRICTED COMMON PORTS: ACCESS
+resource "aws_config_config_rule" "restricted_common_ports_access" {
+  count = "${var.create_config_rules && ! local.exclude_restricted_common_ports_access ? 1 : 0}"
+
+  name             = "restricted-common-ports-access"
+  description      = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports."
+  input_parameters = "{\"blockedPort1\":\"22\",\"blockedPort2\":\"3389\"}"
+
+  scope {
+    compliance_resource_types = ["AWS::EC2::SecurityGroup"]
+  }
+
+  source {
+    owner             = "AWS"
+    source_identifier = "RESTRICTED_INCOMING_TRAFFIC"
+  }
+}
+
+### RESTRICTED COMMON PORTS: DATABASE
+resource "aws_config_config_rule" "restricted_common_ports_database" {
+  count = "${var.create_config_rules && ! local.exclude_restricted_common_ports_database ? 1 : 0}"
+
+  name             = "restricted-common-ports-database"
+  description      = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports."
+  input_parameters = "{\"blockedPort1\":\"1433\",\"blockedPort2\":\"1521\",\"blockedPort3\":\"3306\",\"blockedPort4\":\"4333\",\"blockedPort5\":\"5432\"}"
+
+  scope {
+    compliance_resource_types = ["AWS::EC2::SecurityGroup"]
+  }
+
+  source {
+    owner             = "AWS"
+    source_identifier = "RESTRICTED_INCOMING_TRAFFIC"
+  }
+}
+
+### EBS SNAPSHOT PUBLIC RESTORABLE
+resource "aws_config_config_rule" "ebs_snapshot_public_restorable_check" {
+  count = "${var.create_config_rules && ! local.exclude_ebs_snapshot_public_restorable_check ? 1 : 0}"
+
+  name                        = "ebs-snapshot-public-restorable-check"
+  description                 = "Checks whether Amazon Elastic Block Store (Amazon EBS) snapshots are not publicly restorable. The rule is NON_COMPLIANT if one or more snapshots with RestorableByUserIds field are set to all, that is, Amazon EBS snapshots are public."
+  input_parameters            = "{}"
+  maximum_execution_frequency = "TwentyFour_Hours"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "EBS_SNAPSHOT_PUBLIC_RESTORABLE_CHECK"
+  }
 }
