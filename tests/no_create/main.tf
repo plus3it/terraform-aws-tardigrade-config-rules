@@ -9,5 +9,18 @@ module "no_create" {
     aws = aws
   }
 
-  create_config_rules = false
+  count = 0
+
+  config_recorder_id = null
+  config_rule = {
+    description                 = null
+    input_parameters            = null
+    maximum_execution_frequency = null
+    name                        = null
+    owner                       = null
+    scope                       = null
+    source_details              = null
+    source_identifier           = null
+    tags                        = null
+  }
 }
