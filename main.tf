@@ -35,17 +35,9 @@ resource "aws_config_config_rule" "this" {
   ]
 }
 
-data "aws_iam_policy" "custom_lambda" {
-  count = local.custom_lambda ? 1 : 0
-
-  arn = "arn:${data.aws_partition.this[0].partition}:iam::aws:policy/service-role/AWSConfigRulesExecutionRole"
-}
-
-data "aws_iam_policy_document" "custom_lambda" {
-  count = local.custom_lambda ? 1 : 0
-
-  source_json   = data.aws_iam_policy.custom_lambda[0].policy
-  override_json = var.lambda.policy
+module "vendor" {
+  count  = local.custom_lambda ? 1 : 0
+  source = "git::https://github.com/plus3it/aws-config-rules.git?ref=e6fe305462333b26b55b30fc8586c4cf6f853907"
 }
 
 module "custom_lambda" {
@@ -57,7 +49,7 @@ module "custom_lambda" {
   handler       = var.lambda.handler
   policy        = data.aws_iam_policy_document.custom_lambda[0]
   runtime       = var.lambda.runtime
-  source_path   = "${local.aws_config_rules}/${var.lambda.source_path}"
+  source_path   = var.lambda.source_path
   timeout       = var.lambda.timeout
   tags          = var.lambda.tags
 
@@ -81,7 +73,19 @@ data "aws_partition" "this" {
   count = local.custom_lambda ? 1 : 0
 }
 
+data "aws_iam_policy" "custom_lambda" {
+  count = local.custom_lambda ? 1 : 0
+
+  arn = "arn:${data.aws_partition.this[0].partition}:iam::aws:policy/service-role/AWSConfigRulesExecutionRole"
+}
+
+data "aws_iam_policy_document" "custom_lambda" {
+  count = local.custom_lambda ? 1 : 0
+
+  source_json   = data.aws_iam_policy.custom_lambda[0].policy
+  override_json = var.lambda.policy
+}
+
 locals {
-  aws_config_rules = "${path.module}/vendor/github.com/awslabs/aws-config-rules"
-  custom_lambda    = var.config_rule.owner == "CUSTOM_LAMBDA"
+  custom_lambda = var.config_rule.owner == "CUSTOM_LAMBDA"
 }

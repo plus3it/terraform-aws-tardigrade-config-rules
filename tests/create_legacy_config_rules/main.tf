@@ -285,7 +285,7 @@ locals {
       name        = "config_rule_iam_access_key_rotation_check"
       policy      = data.aws_iam_policy_document.lambda_iam_access_key_rotation_check.json
       runtime     = "nodejs10.x"
-      source_path = "node/iam_access_key_rotation-triggered.js"
+      source_path = "${local.source_path}/node/iam_access_key_rotation-triggered.js"
     })
 
     rds-vpc-public-subnet = merge(local.defaults.lambda, {
@@ -293,7 +293,7 @@ locals {
       handler     = "rds_vpc_public_subnet.lambda_handler"
       name        = "config_rule_rds_vpc_public_subnet"
       runtime     = "python3.6"
-      source_path = "python/rds_vpc_public_subnet.py"
+      source_path = "${local.source_path}/python/rds_vpc_public_subnet.py"
     })
 
     config-enabled = merge(local.defaults.lambda, {
@@ -301,7 +301,7 @@ locals {
       handler     = "config_enabled.lambda_handler"
       name        = "config_rule_config_enabled"
       runtime     = "python3.6"
-      source_path = "python/config_enabled.py"
+      source_path = "${local.source_path}/python/config_enabled.py"
     })
 
     iam-mfa-for-console-access = merge(local.defaults.lambda, {
@@ -310,9 +310,11 @@ locals {
       name        = "config_rule_iam_mfa_for_console_access"
       policy      = data.aws_iam_policy_document.lambda_iam_mfa_for_console_access.json
       runtime     = "python3.6"
-      source_path = "python/iam_mfa_for_console_access.py"
+      source_path = "${local.source_path}/python/iam_mfa_for_console_access.py"
     })
   }
+
+  source_path = "${path.module}/.terraform/modules/create_config_rules.vendor"
 
   defaults = {
     config_rule = {
