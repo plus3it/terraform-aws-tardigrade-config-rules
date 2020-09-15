@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 2.0.0
+
+**Released**: 2020.09.15
+
+**Commit Delta**: [Change from 1.0.4 release](https://github.com/plus3it/terraform-aws-tardigrade-config-rules/compare/1.0.4..2.0.0)
+
+**Summary**:
+
+*   Entirely reworks module to be unopionated and allow users to create arbitrary config rules.
+    See `tests/create_legacy_config_rules` for a configuration that uses the new module to create
+    the prior set of config rules.
+*   Removes the var `create_config_rules`. Instead, use tf 0.13 and `count`/`for_each` on the module
+    block. See `tests/no_create`.
+*   Removes vendored custom config_rules, and instead uses a module block to pull them down during
+    `terraform init`. As a result, the `source_path` for custom config_rules has changed. For an example,
+    see the `source_path` argument in `tests/create_custom_config_rule`.
+*   Outputs the Config Rule object as `config_rule`.
+
 ### 1.0.4
 
 **Released**: 2019.10.28
