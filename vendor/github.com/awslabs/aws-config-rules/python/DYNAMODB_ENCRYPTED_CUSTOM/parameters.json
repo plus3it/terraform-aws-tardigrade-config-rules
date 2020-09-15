@@ -1,9 +1,0 @@
-{
-  "Parameters": {
-    "RuleName": "DYNAMODB_ENCRYPTED",
-    "SourceRuntime": "python3.6",
-    "CodeKey": "DYNAMODB_ENCRYPTED.zip",
-    "InputParameters": "{}",
-    "SourceEvents": "AWS::DynamoDB::Table"
-  }
-}

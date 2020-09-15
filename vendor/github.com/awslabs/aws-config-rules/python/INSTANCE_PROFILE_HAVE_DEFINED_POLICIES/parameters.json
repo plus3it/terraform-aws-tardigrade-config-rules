@@ -1,9 +1,0 @@
-{
-  "Parameters": {
-    "RuleName": "INSTANCE_PROFILE_HAVE_DEFINED_POLICIES",
-    "SourceRuntime": "python3.6",
-    "CodeKey": "INSTANCE_PROFILE_HAVE_DEFINED_POLICIES.zip",
-    "InputParameters": "{}",
-    "SourceEvents": "AWS::IAM::Role"
-  }
-}
