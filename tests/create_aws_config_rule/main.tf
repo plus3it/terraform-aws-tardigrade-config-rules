@@ -49,3 +49,8 @@ resource "random_string" "this" {
 }
 
 data "aws_caller_identity" "this" {}
+
+output "config_rule" {
+  description = "AWS Config Rule object"
+  value       = module.create_config_rules.config_rule
+}

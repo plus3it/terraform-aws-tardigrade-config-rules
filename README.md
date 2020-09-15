@@ -32,6 +32,8 @@ make clean && make vendor
 
 ## Outputs
 
-No output.
+| Name | Description |
+|------|-------------|
+| config\_rule | AWS Config Rule object |
 
 <!-- END TFDOCS -->

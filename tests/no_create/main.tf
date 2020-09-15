@@ -24,3 +24,8 @@ module "no_create" {
     tags                        = null
   }
 }
+
+output "no_create" {
+  description = "Module object from no_create"
+  value       = module.no_create
+}

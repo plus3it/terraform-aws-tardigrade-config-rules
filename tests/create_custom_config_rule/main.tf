@@ -87,3 +87,8 @@ data "aws_iam_policy_document" "lambda_iam_access_key_rotation_check" {
     resources = ["*"]
   }
 }
+
+output "config_rule" {
+  description = "AWS Config Rule object"
+  value       = module.create_config_rules.config_rule
+}

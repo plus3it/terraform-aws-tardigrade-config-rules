@@ -358,3 +358,8 @@ locals {
     ]
   }
 }
+
+output "create_config_rules" {
+  description = "Module object from create_config_rules"
+  value       = module.create_config_rules
+}
