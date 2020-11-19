@@ -35,11 +35,6 @@ resource "aws_config_config_rule" "this" {
   ]
 }
 
-module "vendor" {
-  count  = local.custom_lambda ? 1 : 0
-  source = "git::https://github.com/plus3it/aws-config-rules.git?ref=e6fe305462333b26b55b30fc8586c4cf6f853907"
-}
-
 module "custom_lambda" {
   count  = local.custom_lambda ? 1 : 0
   source = "git::https://github.com/plus3it/terraform-aws-lambda.git?ref=v1.2.0"
