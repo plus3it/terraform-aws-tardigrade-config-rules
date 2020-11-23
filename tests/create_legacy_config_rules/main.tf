@@ -15,6 +15,10 @@ module "create_config_rules" {
   lambda             = try(local.lambdas[each.key], null)
 }
 
+module "vendor" {
+  source = "git::https://github.com/plus3it/aws-config-rules.git?ref=e6fe305462333b26b55b30fc8586c4cf6f853907"
+}
+
 module "config" {
   source = "git::https://github.com/plus3it/terraform-aws-tardigrade-config.git?ref=1.0.7"
 
@@ -314,7 +318,7 @@ locals {
     })
   }
 
-  source_path = "${path.module}/.terraform/modules/create_config_rules.vendor"
+  source_path = "${path.module}/.terraform/modules/vendor"
 
   defaults = {
     config_rule = {
