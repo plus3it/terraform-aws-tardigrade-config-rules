@@ -9,7 +9,7 @@ resource "aws_config_config_rule" "this" {
     owner             = var.config_rule.owner
     source_identifier = local.custom_lambda ? module.custom_lambda[0].function_arn : var.config_rule.source_identifier
 
-    dynamic source_detail {
+    dynamic "source_detail" {
       for_each = var.config_rule.source_details != null ? var.config_rule.source_details : []
 
       content {
@@ -18,7 +18,7 @@ resource "aws_config_config_rule" "this" {
     }
   }
 
-  dynamic scope {
+  dynamic "scope" {
     for_each = var.config_rule.scope != null ? [var.config_rule.scope] : []
 
     content {
