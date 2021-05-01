@@ -37,7 +37,7 @@ resource "aws_config_config_rule" "this" {
 
 module "custom_lambda" {
   count  = local.custom_lambda ? 1 : 0
-  source = "git::https://github.com/plus3it/terraform-aws-lambda.git?ref=v1.2.0"
+  source = "git::https://github.com/plus3it/terraform-aws-lambda.git?ref=v1.3.0"
 
   function_name = var.lambda.name
   description   = var.lambda.description
