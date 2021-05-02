@@ -60,7 +60,7 @@ module "vendor" {
 }
 
 module "config" {
-  source = "git::https://github.com/plus3it/terraform-aws-tardigrade-config.git?ref=1.0.7"
+  source = "git::https://github.com/plus3it/terraform-aws-tardigrade-config.git?ref=3.0.0"
 
   providers = {
     aws = aws
