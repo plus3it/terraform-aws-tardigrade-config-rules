@@ -5,11 +5,7 @@ provider "aws" {
 
 module "no_create" {
   source = "../../"
-  providers = {
-    aws = aws
-  }
-
-  count = 0
+  count  = 0
 
   config_recorder_id = null
   config_rule = {

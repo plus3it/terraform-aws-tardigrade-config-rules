@@ -1,4 +1,3 @@
-
 name: Update terraform dependencies
 
 on:
@@ -18,5 +17,4 @@ jobs:
             /
             /tests/create_aws_config_rule
             /tests/create_custom_config_rule
-            /tests/create/legacy/config_rules
-
+            /tests/create/legacy_config_rules
