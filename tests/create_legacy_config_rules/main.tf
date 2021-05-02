@@ -6,10 +6,6 @@ module "create_config_rules" {
   source   = "../../"
   for_each = local.config_rules
 
-  providers = {
-    aws = aws
-  }
-
   config_recorder_id = module.config.config_recorder_id
   config_rule        = each.value
   lambda             = try(local.lambdas[each.key], null)
@@ -20,14 +16,8 @@ module "vendor" {
 }
 
 module "config" {
-  source = "git::https://github.com/plus3it/terraform-aws-tardigrade-config.git?ref=1.0.7"
+  source = "git::https://github.com/plus3it/terraform-aws-tardigrade-config.git?ref=3.0.0"
 
-  providers = {
-    aws = aws
-  }
-
-  create_config = true
-  account_id    = data.aws_caller_identity.this.account_id
   config_bucket = aws_s3_bucket.this.id
 }
 
@@ -46,8 +36,6 @@ resource "random_string" "this" {
   special = false
   upper   = false
 }
-
-data "aws_caller_identity" "this" {}
 
 data "aws_iam_policy_document" "lambda_iam_access_key_rotation_check" {
   statement {

@@ -5,10 +5,6 @@ provider "aws" {
 module "create_config_rules" {
   source = "../../"
 
-  providers = {
-    aws = aws
-  }
-
   config_rule = {
     description                 = "Checks that your Amazon S3 buckets do not allow public read access. The rule checks the Block Public Access settings, the bucket policy, and the bucket access control list (ACL)"
     input_parameters            = null
@@ -25,14 +21,8 @@ module "create_config_rules" {
 }
 
 module "config" {
-  source = "git::https://github.com/plus3it/terraform-aws-tardigrade-config.git?ref=1.0.7"
+  source = "git::https://github.com/plus3it/terraform-aws-tardigrade-config.git?ref=3.0.0"
 
-  providers = {
-    aws = aws
-  }
-
-  create_config = true
-  account_id    = data.aws_caller_identity.this.account_id
   config_bucket = aws_s3_bucket.this.id
 }
 
@@ -47,8 +37,6 @@ resource "random_string" "this" {
   special = false
   upper   = false
 }
-
-data "aws_caller_identity" "this" {}
 
 output "config_rule" {
   description = "AWS Config Rule object"

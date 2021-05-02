@@ -3,7 +3,11 @@ resource "aws_config_config_rule" "this" {
   description                 = var.config_rule.description
   input_parameters            = var.config_rule.input_parameters
   maximum_execution_frequency = var.config_rule.maximum_execution_frequency
-  tags                        = var.config_rule.tags
+
+  tags = merge(
+    { Name = var.config_rule.name },
+    var.config_rule.tags,
+  )
 
   source {
     owner             = var.config_rule.owner
@@ -46,7 +50,11 @@ module "custom_lambda" {
   runtime       = var.lambda.runtime
   source_path   = var.lambda.source_path
   timeout       = var.lambda.timeout
-  tags          = var.lambda.tags
+
+  tags = merge(
+    { Name = var.lambda.name },
+    var.lambda.tags,
+  )
 
   reserved_concurrent_executions = var.lambda.reserved_concurrent_executions
 }
