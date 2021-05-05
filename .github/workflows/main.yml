@@ -17,4 +17,4 @@ jobs:
             /
             /tests/create_aws_config_rule
             /tests/create_custom_config_rule
-            /tests/create/legacy_config_rules
+            /tests/create_legacy_config_rules
