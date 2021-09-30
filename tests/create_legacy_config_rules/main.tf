@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
 module "create_config_rules" {
   source   = "../../"
   for_each = local.config_rules
