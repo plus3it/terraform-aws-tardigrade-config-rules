@@ -39,7 +39,7 @@ module "create_config_rules" {
     handler                        = "iam_access_key_rotation-triggered.handler"
     name                           = "config_rule_iam_access_key_rotation_check"
     policy                         = data.aws_iam_policy_document.lambda_iam_access_key_rotation_check.json
-    runtime                        = "nodejs10.x"
+    runtime                        = "nodejs16.x"
     source_path                    = "${path.module}/.terraform/modules/vendor/node/iam_access_key_rotation-triggered.js"
     reserved_concurrent_executions = -1
     tags                           = {}
