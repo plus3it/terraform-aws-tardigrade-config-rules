@@ -272,7 +272,7 @@ locals {
       handler     = "iam_access_key_rotation-triggered.handler"
       name        = "config_rule_iam_access_key_rotation_check"
       policy      = data.aws_iam_policy_document.lambda_iam_access_key_rotation_check.json
-      runtime     = "nodejs10.x"
+      runtime     = "nodejs16.x"
       source_path = "${local.source_path}/node/iam_access_key_rotation-triggered.js"
     })
 
@@ -280,7 +280,7 @@ locals {
       description = "Checks that no RDS Instances are in a Public Subnet"
       handler     = "rds_vpc_public_subnet.lambda_handler"
       name        = "config_rule_rds_vpc_public_subnet"
-      runtime     = "python3.6"
+      runtime     = "python3.9"
       source_path = "${local.source_path}/python/rds_vpc_public_subnet.py"
     })
 
@@ -288,7 +288,7 @@ locals {
       description = "Checks that Config has been activated and is logging to a specific bucket and sending to a specifc SNS topic"
       handler     = "config_enabled.lambda_handler"
       name        = "config_rule_config_enabled"
-      runtime     = "python3.6"
+      runtime     = "python3.9"
       source_path = "${local.source_path}/python/config_enabled.py"
     })
 
@@ -297,7 +297,7 @@ locals {
       handler     = "iam_mfa_for_console_access.lambda_handler"
       name        = "config_rule_iam_mfa_for_console_access"
       policy      = data.aws_iam_policy_document.lambda_iam_mfa_for_console_access.json
-      runtime     = "python3.6"
+      runtime     = "python3.9"
       source_path = "${local.source_path}/python/iam_mfa_for_console_access.py"
     })
   }
