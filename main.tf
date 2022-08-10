@@ -85,8 +85,8 @@ data "aws_iam_policy" "custom_lambda" {
 data "aws_iam_policy_document" "custom_lambda" {
   count = local.custom_lambda ? 1 : 0
 
-  source_json   = data.aws_iam_policy.custom_lambda[0].policy
-  override_json = var.lambda.policy
+  source_policy_documents   = compact([data.aws_iam_policy.custom_lambda[0].policy])
+  override_policy_documents = compact([var.lambda.policy])
 }
 
 locals {
